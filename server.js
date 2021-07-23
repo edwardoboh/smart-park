@@ -1,0 +1,20 @@
+require('dotenv').config()
+const http = require("http")
+const express = require('express')
+const cors = require('cors')
+const morgan = require('morgan')
+const mongoose = require('mongoose')
+const app = express()
+const server = http.createServer(app)
+const socket = require('socket.io')
+const io = socket(server, {cors: {origin: '*'}})
+mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true }).then(() => console.log("Connection to Database Successful"))
+
+app.use(cors())
+app.use(express.json())
+app.use(morgan('dev'))
+app.use("/", require('./routes/index')(io))
+app.use("/api", require('./routes/api').api(io))
+
+const PORT = process.env.PORT || 5000
+server.listen(PORT, () => console.log(`Server started on PORT: ${PORT}`))
