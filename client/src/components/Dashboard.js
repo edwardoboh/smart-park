@@ -144,7 +144,7 @@ export default function Dashboard() {
 
   // Socket IO UseEffect
   useEffect(() => {
-  socket = io()
+  socket = io(serverUrl)
   console.log("Socket connected in frontend")
   socket.on("readings", payload => {
     console.log("Socket executed in frontend")
